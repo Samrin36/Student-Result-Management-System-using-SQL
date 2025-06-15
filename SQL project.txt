@@ -1,0 +1,55 @@
+CREATE DATABASE StudentResultDB;
+USE StudentResultDB;
+CREATE TABLE Students (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    class VARCHAR(10),
+    gender VARCHAR(10)
+);
+CREATE TABLE Subjects (
+    subject_id INT PRIMARY KEY,
+    subject_name VARCHAR(50)
+);
+CREATE TABLE Marks (
+    mark_id INT PRIMARY KEY,
+    student_id INT,
+    subject_id INT,
+    marks_obtained INT,
+    FOREIGN KEY (student_id) REFERENCES Students(student_id),
+    FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id)
+);
+INSERT INTO Students VALUES
+(1, 'Alice', '10A', 'Female'),
+(2, 'Bob', '10A', 'Male'),
+(3, 'Charlie', '10A', 'Male');
+INSERT INTO Subjects VALUES
+(101, 'Mathematics'),
+(102, 'Science'),
+(103, 'English');
+INSERT INTO Marks VALUES
+(1, 1, 101, 88),
+(2, 1, 102, 92),
+(3, 1, 103, 85),
+(4, 2, 101, 75),
+(5, 2, 102, 80),
+(6, 2, 103, 78),
+(7, 3, 101, 90),
+(8, 3, 102, 95),
+(9, 3, 103, 88);
+SELECT s.name, sub.subject_name, m.marks_obtained
+FROM Marks m
+JOIN Students s ON m.student_id = s.student_id
+JOIN Subjects sub ON m.subject_id = sub.subject_id
+ORDER BY s.name;
+SELECT s.name, 
+       SUM(m.marks_obtained) AS total_marks,
+       AVG(m.marks_obtained) AS average_marks
+FROM Marks m
+JOIN Students s ON m.student_id = s.student_id
+GROUP BY s.name;
+SELECT s.name, AVG(m.marks_obtained) AS average_marks
+FROM Marks m
+JOIN Students s ON m.student_id = s.student_id
+GROUP BY s.name
+ORDER BY average_marks DESC
+LIMIT 1;
